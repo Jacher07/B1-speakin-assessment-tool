@@ -1,0 +1,450 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B1 Speaking Assessment Tool</title>
+
+<style>
+:root {
+  --navy: #17324d;
+  --blue: #27628a;
+  --pale: #eef5fa;
+  --line: #d8e2ea;
+  --ink: #243342;
+  --muted: #617386;
+  --green: #16734b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f7fa;
+  color: var(--ink);
+  font: 16px/1.5 Arial, sans-serif;
+}
+
+header {
+  background: var(--navy);
+  color: white;
+  padding: 28px 20px;
+}
+
+header .wrap, main {
+  max-width: 980px;
+  margin: auto;
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+}
+
+header p {
+  margin: 0;
+  color: #dbe8f2;
+}
+
+main {
+  padding: 24px 16px 48px;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px #19344b0b;
+}
+
+h2 {
+  font-size: 20px;
+  color: var(--navy);
+  margin: 0 0 12px;
+}
+
+h3 {
+  font-size: 17px;
+  margin: 0 0 8px;
+}
+
+label {
+  display: block;
+  font-weight: 700;
+  margin: 10px 0 5px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #bdcbd7;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+}
+
+.criterion {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 15px;
+  margin: 12px 0;
+  background: #fcfdff;
+}
+
+.criterion p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.scale {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.scale label {
+  border: 1px solid var(--line);
+  padding: 9px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.scale input {
+  width: auto;
+}
+
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 17px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.primary {
+  background: var(--blue);
+  color: white;
+}
+
+.secondary {
+  background: var(--pale);
+  color: var(--navy);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.result {
+  background: #edf7f1;
+  border: 1px solid #b9ddc9;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.score {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--green);
+}
+
+.small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+@media(max-width:520px) {
+  .scale {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media print {
+  body { background: white; }
+  .actions { display: none; }
+  .card { box-shadow: none; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="wrap">
+<h1>B1 Speaking Assessment Tool</h1>
+<p>Summative Assessment · CEFR B1 · Oral Presentation</p>
+</div>
+</header>
+
+<main>
+
+<section class="card">
+<h2>Assessment Task</h2>
+
+<p>
+<strong>Student task:</strong>
+Give a 3-minute oral presentation about a meaningful
+personal experience, a challenge you overcame, or an
+achievement. Explain what happened, how you felt,
+what you learned, and why the experience was important.
+</p>
+
+<p>
+<strong>Instructions:</strong>
+The teacher listens and selects one performance level
+for each criterion.
+</p>
+
+<div class="grid">
+<div>
+<label for="student">Student Name</label>
+<input id="student" placeholder="Enter student name">
+</div>
+
+<div>
+<label for="date">Date</label>
+<input id="date" type="date">
+</div>
+</div>
+</section>
+
+<section class="card">
+<h2>Analytic Rubric</h2>
+
+<p class="small">
+Choose one level per criterion.
+Each criterion is scored from 1 to 4.
+Maximum score: 20 points.
+</p>
+
+<div id="criteria"></div>
+</section>
+
+<section class="card">
+<h2>Teacher's Feedback</h2>
+
+<label for="strengths">Strengths Observed</label>
+<textarea id="strengths" rows="2"
+placeholder="Write specific evidence of what the student did well."></textarea>
+
+<label for="improve">Areas for Improvement</label>
+<textarea id="improve" rows="2"
+placeholder="Write suggestions for improvement."></textarea>
+
+<div class="actions">
+<button class="primary" onclick="calculate()">
+Calculate Score
+</button>
+
+<button class="secondary" onclick="window.print()">
+Print / Save as PDF
+</button>
+
+<button class="secondary" onclick="resetForm()">
+Reset
+</button>
+</div>
+</section>
+
+<section class="card result" aria-live="polite">
+<h2>Assessment Result</h2>
+
+<div class="score" id="score">0 / 20</div>
+
+<div id="percent">0%</div>
+
+<div id="overall">
+Select a level for each criterion, then calculate the score.
+</div>
+
+<div class="small" id="breakdown"></div>
+</section>
+
+</main>
+
+<script>
+
+const rubric = [
+
+{
+name: "Task Achievement & Organization",
+desc: "How clearly the student addresses the task and organizes ideas.",
+levels: [
+"4 – Fully addresses the task; ideas are well-developed and logically sequenced.",
+"3 – Addresses the task; ideas are generally clear and organized.",
+"2 – Addresses only part of the task; development is sometimes unclear.",
+"1 – Gives very limited relevant information; ideas are difficult to follow."
+]
+},
+
+{
+name: "Fluency & Coherence",
+desc: "How smoothly the student communicates and connects ideas.",
+levels: [
+"4 – Speaks at a natural, sustained pace; uses linking devices.",
+"3 – Generally maintains flow; some hesitation, but the message is clear.",
+"2 – Frequent pauses sometimes interrupt the message.",
+"1 – Long pauses and fragmented speech make communication difficult."
+]
+},
+
+{
+name: "Grammar",
+desc: "Range and control of grammatical structures.",
+levels: [
+"4 – Uses a range of structures with good control.",
+"3 – Uses simple and some complex structures; meaning is generally clear.",
+"2 – Relies mostly on simple structures; frequent errors.",
+"1 – Very limited control of basic grammatical structures."
+]
+},
+
+{
+name: "Vocabulary",
+desc: "Range and appropriacy of vocabulary.",
+levels: [
+"4 – Uses varied vocabulary to explain experiences and feelings.",
+"3 – Uses adequate everyday vocabulary; some repetition.",
+"2 – Uses limited vocabulary with noticeable repetition.",
+"1 – Very limited vocabulary makes communication difficult."
+]
+},
+
+{
+name: "Pronunciation & Intelligibility",
+desc: "How understandable the student's speech is.",
+levels: [
+"4 – Easily understood throughout the presentation.",
+"3 – Generally understandable; occasional pronunciation issues.",
+"2 – Sometimes difficult to understand.",
+"1 – Frequently difficult to understand."
+]
+}
+
+];
+
+const root = document.getElementById("criteria");
+
+rubric.forEach((criterion, index) => {
+
+const div = document.createElement("div");
+div.className = "criterion";
+
+div.innerHTML = `
+<h3>${index + 1}. ${criterion.name}</h3>
+<p>${criterion.desc}</p>
+
+<div class="scale">
+
+${criterion.levels.map((level, j) => `
+<label>
+<input type="radio"
+name="c${index}"
+value="${4-j}">
+${level}
+</label>
+`).join("")}
+
+</div>
+`;
+
+root.appendChild(div);
+
+});
+
+function calculate() {
+
+let values = rubric.map((_, index) => {
+
+const selected = document.querySelector(
+`input[name="c${index}"]:checked`
+);
+
+return selected ? Number(selected.value) : 0;
+
+});
+
+let missing = values.filter(v => v === 0).length;
+
+if (missing > 0) {
+
+document.getElementById("overall").textContent =
+`Please score all criteria. ${missing} still need a rating.`;
+
+return;
+
+}
+
+let total = values.reduce((a, b) => a + b, 0);
+
+let percentage = Math.round((total / 20) * 100);
+
+document.getElementById("score").textContent =
+`${total} / 20`;
+
+document.getElementById("percent").textContent =
+`${percentage}%`;
+
+let interpretation;
+
+if (total >= 17) {
+interpretation = "Strong B1 performance.";
+}
+else if (total >= 13) {
+interpretation = "Developing / generally effective B1 performance.";
+}
+else if (total >= 9) {
+interpretation = "B1 performance needs support.";
+}
+else {
+interpretation = "Performance is below the expected task standard.";
+}
+
+document.getElementById("overall").textContent =
+interpretation;
+
+document.getElementById("breakdown").textContent =
+"Criterion scores: " + values.join(" · ");
+
+}
+
+function resetForm() {
+
+document.querySelectorAll(
+'input[type="radio"]'
+).forEach(input => input.checked = false);
+
+["student", "date", "strengths", "improve"].forEach(id => {
+document.getElementById(id).value = "";
+});
+
+document.getElementById("score").textContent = "0 / 20";
+document.getElementById("percent").textContent = "0%";
+
+document.getElementById("overall").textContent =
+"Select a level for each criterion, then calculate the score.";
+
+document.getElementById("breakdown").textContent = "";
+
+}
+
+</script>
+
+</body>
+</html>
