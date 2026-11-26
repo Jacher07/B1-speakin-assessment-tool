@@ -1,0 +1,664 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELT Smart Evaluator</title>
+
+<style>
+:root {
+  --primary: #4056a1;
+  --light: #e9edff;
+  --background: #f4f6fb;
+  --border: #dce2ec;
+  --text: #182238;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background: linear-gradient(120deg,#202d55,#465da8);
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+
+header h1 { margin: 0 0 8px; }
+
+.container {
+  max-width: 1050px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+h2 { color: var(--primary); }
+
+label {
+  display: block;
+  font-weight: bold;
+  margin: 12px 0 5px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #cbd3e2;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+textarea {
+  min-height: 65px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+th, td {
+  border: 1px solid var(--border);
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th { background: var(--light); }
+
+button {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  margin: 5px;
+}
+
+.primary {
+  background: var(--primary);
+  color: white;
+}
+
+.secondary {
+  background: #edf0f7;
+  color: var(--text);
+}
+
+.score-box {
+  background: var(--light);
+  padding: 18px;
+  border-radius: 10px;
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.big {
+  font-size: 25px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.hint {
+  color: #647087;
+  font-size: 13px;
+}
+
+.actions { margin-top: 15px; }
+
+@media(max-width:650px) {
+  .container { padding: 10px; }
+  .card { padding: 14px; }
+  table { font-size: 12px; }
+  th, td { padding: 6px; }
+}
+
+@media print {
+  .actions, button { display: none; }
+  body { background: white; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>ELT Smart Evaluator</h1>
+  <p>Speaking Assessment | CEFR B1 | Summative</p>
+</header>
+
+<main class="container">
+
+<section class="card">
+  <h2>Assessment Overview</h2>
+  <p><b>Task:</b> Talk about a memorable experience.</p>
+  <p><b>Level:</b> B1 Intermediate</p>
+  <p><b>Duration:</b> 2–3 minutes speaking + questions.</p>
+  <p><b>Objective:</b> Students will communicate a past experience using connected ideas, appropriate vocabulary and generally accurate language.</p>
+</section>
+
+<section class="card">
+  <h2>Student Information</h2>
+
+  <label>Student Name</label>
+  <input id="student" type="text" placeholder="Student name">
+
+  <label>Group / Class</label>
+  <input id="group" type="text" placeholder="Group">
+
+  <label>Date</label>
+  <input id="date" type="date">
+
+  <label>Teacher Observation Notes</label>
+  <textarea id="notes" placeholder="Teacher notes..."></textarea>
+</section>
+
+<section class="card">
+  <h2>Student Instructions</h2>
+  <ol>
+    <li>Think of a memorable experience.</li>
+    <li>You have 2 minutes to prepare.</li>
+    <li>Speak for 2–3 minutes.</li>
+    <li>Explain what happened, when, where and how you felt.</li>
+    <li>Answer two follow-up questions.</li>
+  </ol>
+
+  <p><b>Follow-up questions:</b></p>
+  <ul>
+    <li>What did you learn from this experience?</li>
+    <li>Would you like to experience it again? Why?</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>Analytic Assessment Rubric</h2>
+  <p class="hint">Select one score from 1 to 5 for each criterion.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Criterion</th>
+        <th>Assessment Description</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td><b>Fluency & Coherence</b></td>
+        <td>5: Steady speech and logically connected ideas.<br>
+        3: Some pauses and repetition, but understandable.<br>
+        1: Frequent pauses and disconnected ideas.</td>
+        <td><select class="score">
+          <option value="0">Select</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select></td>
+      </tr>
+
+      <tr>
+        <td><b>Grammar Accuracy</b></td>
+        <td>5: Uses a range of structures with few errors.<br>
+        3: Some errors, but meaning is clear.<br>
+        1: Frequent errors affect understanding.</td>
+        <td><select class="score">
+          <option value="0">Select</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select></td>
+      </tr>
+
+      <tr>
+        <td><b>Vocabulary</b></td>
+        <td>5: Uses varied and relevant vocabulary.<br>
+        3: Uses familiar vocabulary with repetition.<br>
+        1: Limited vocabulary prevents expression.</td>
+        <td><select class="score">
+          <option value="0">Select</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select></td>
+      </tr>
+
+      <tr>
+        <td><b>Pronunciation</b></td>
+        <td>5: Clear and easy to understand.<br>
+        3: Generally understandable with occasional difficulties.<br>
+        1: Pronunciation frequently affects understanding.</td>
+        <td><select class="score">
+          <option value="0">Select</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select></td>
+      </tr>
+
+      <tr>
+        <td><b>Task Achievement & Interaction</b></td>
+        <td>5: Covers all points and answers both questions.<br>
+        3: Covers most points and answers with some support.<br>
+        1: Misses most points and struggles to respond.</td>
+        <td><select class="score">
+          <option value="0">Select</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="score-box">
+    <div>
+      <b>Total Score</b>
+      <div class="big" id="total">0 / 25</div>
+    </div>
+    <div>
+      <b>Percentage</b>
+      <div class="big" id="percentage">0%</div>
+    </div>
+  </div>
+
+  <p id="scoreMessage" class="hint">Select all five criteria.</p>
+</section>
+
+<section class="card">
+  <h2>Teacher Feedback</h2>
+
+  <label>Strengths</label>
+  <textarea id="strengths"></textarea>
+
+  <label>Areas for Improvement</label>
+  <textarea id="improvements"></textarea>
+
+  <div class="actions">
+    <button class="primary" onclick="saveGrade()">
+      Save Grade to Class List
+    </button>
+
+    <button class="secondary" onclick="resetForm()">
+      New Student / Reset
+    </button>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Class Grade List</h2>
+
+  <div class="score-box">
+    <div>
+      <b>Students Evaluated</b>
+      <div class="big" id="studentCount">0</div>
+    </div>
+
+    <div>
+      <b>Class Average</b>
+      <div class="big" id="classAverage">0%</div>
+    </div>
+  </div>
+
+  <div style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Student</th>
+          <th>Group</th>
+          <th>Date</th>
+          <th>Score</th>
+          <th>Grade</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="gradeRows">
+        <tr>
+          <td colspan="7">No grades saved yet.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="actions">
+    <button class="primary" onclick="exportCSV()">
+      Export Grades to Excel (CSV)
+    </button>
+
+    <button class="secondary" onclick="window.print()">
+      Print Class Grades
+    </button>
+
+    <button class="secondary" onclick="clearGrades()">
+      Clear All Grades
+    </button>
+  </div>
+</section>
+
+</main>
+
+<script>
+
+// APPLICATION DATA
+
+const STORAGE_KEY = "elt_smart_evaluator_grades";
+
+const scoreSelects = [
+  ...document.querySelectorAll(".score")
+];
+
+// GET CURRENT SCORES
+
+function getScores() {
+  return scoreSelects.map(select => Number(select.value));
+}
+
+// CALCULATE STUDENT SCORE
+
+function calculateScore() {
+  const scores = getScores();
+
+  const total = scores.reduce(
+    (sum, score) => sum + score, 0
+  );
+
+  const complete = scores.every(
+    score => score >= 1 && score <= 5
+  );
+
+  const percentage = Math.round(
+    total / 25 * 100
+  );
+
+  document.getElementById("total").textContent =
+    total + " / 25";
+
+  document.getElementById("percentage").textContent =
+    percentage + "%";
+
+  document.getElementById("scoreMessage").textContent =
+    complete
+      ? "Evaluation completed. Review the evidence before confirming the grade."
+      : "Please score all five criteria.";
+
+  return { scores, total, percentage, complete };
+}
+
+scoreSelects.forEach(select => {
+  select.addEventListener("change", calculateScore);
+});
+
+// LOAD SAVED STUDENTS
+
+function getGrades() {
+  try {
+    return JSON.parse(
+      localStorage.getItem(STORAGE_KEY) || "[]"
+    );
+  } catch {
+    return [];
+  }
+}
+
+// SAVE DATA
+
+function saveGrades(grades) {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(grades)
+  );
+}
+
+// SAVE ONE STUDENT
+
+function saveGrade() {
+
+  const result = calculateScore();
+
+  const student = document
+    .getElementById("student").value.trim();
+
+  if (!student) {
+    alert("Please enter the student's name.");
+    return;
+  }
+
+  if (!result.complete) {
+    alert("Please score all five criteria.");
+    return;
+  }
+
+  const grade = {
+    id: Date.now(),
+    student: student,
+    group: document.getElementById("group").value,
+    date: document.getElementById("date").value,
+    scores: result.scores,
+    total: result.total,
+    percentage: result.percentage,
+    notes: document.getElementById("notes").value,
+    strengths: document.getElementById("strengths").value,
+    improvements: document.getElementById("improvements").value
+  };
+
+  const grades = getGrades();
+
+  grades.push(grade);
+
+  saveGrades(grades);
+
+  renderGrades();
+
+  alert(
+    student + "'s grade has been saved: " +
+    result.total + "/25 (" +
+    result.percentage + "%)"
+  );
+}
+
+// DISPLAY CLASS GRADE LIST
+
+function renderGrades() {
+
+  const grades = getGrades();
+
+  const tbody = document.getElementById("gradeRows");
+
+  document.getElementById("studentCount").textContent =
+    grades.length;
+
+  const average = grades.length
+    ? grades.reduce(
+        (sum, grade) => sum + grade.percentage, 0
+      ) / grades.length
+    : 0;
+
+  document.getElementById("classAverage").textContent =
+    grades.length ? average.toFixed(1) + "%" : "0%";
+
+  if (!grades.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="7">No grades saved yet.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = grades.map((grade, index) => `
+    <tr>
+      <td>${index + 1}</td>
+      <td>${escapeHTML(grade.student)}</td>
+      <td>${escapeHTML(grade.group || "-")}</td>
+      <td>${escapeHTML(grade.date || "-")}</td>
+      <td>${grade.total}/25</td>
+      <td>${grade.percentage}%</td>
+      <td>
+        <button class="secondary"
+          onclick="deleteGrade(${grade.id})">
+          Delete
+        </button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// SAFE DISPLAY OF STUDENT INPUT
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+// DELETE ONE GRADE
+
+function deleteGrade(id) {
+
+  if (!confirm("Delete this student's evaluation?")) {
+    return;
+  }
+
+  const grades = getGrades().filter(
+    grade => grade.id !== id
+  );
+
+  saveGrades(grades);
+
+  renderGrades();
+}
+
+// CLEAR CLASS LIST
+
+function clearGrades() {
+
+  if (!confirm("Delete ALL saved student grades?")) {
+    return;
+  }
+
+  saveGrades([]);
+
+  renderGrades();
+}
+
+// EXPORT CLASS GRADES TO CSV
+
+function exportCSV() {
+
+  const grades = getGrades();
+
+  if (!grades.length) {
+    alert("No grades available to export.");
+    return;
+  }
+
+  const headers = [
+    "Student",
+    "Group",
+    "Date",
+    "Fluency",
+    "Grammar",
+    "Vocabulary",
+    "Pronunciation",
+    "Task Achievement",
+    "Total",
+    "Percentage",
+    "Teacher Notes",
+    "Strengths",
+    "Improvements"
+  ];
+
+  const rows = grades.map(g => [
+    g.student,
+    g.group,
+    g.date,
+    ...g.scores,
+    g.total,
+    g.percentage + "%",
+    g.notes,
+    g.strengths,
+    g.improvements
+  ]);
+
+  const csv = [headers, ...rows]
+    .map(row => row.map(value =>
+      '"' + String(value ?? "").replace(/"/g, '""') + '"'
+    ).join(","))
+    .join("\r\n");
+
+  const blob = new Blob(
+    ["\uFEFF" + csv],
+    { type: "text/csv;charset=utf-8;" }
+  );
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "Class_Speaking_Grades.csv";
+
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+// RESET FORM FOR NEXT STUDENT
+
+function resetForm() {
+
+  document.querySelectorAll(
+    "input, textarea"
+  ).forEach(element => {
+    element.value = "";
+  });
+
+  scoreSelects.forEach(select => {
+    select.value = "0";
+  });
+
+  calculateScore();
+}
+
+// INITIALIZE APPLICATION
+
+calculateScore();
+renderGrades();
+
+</script>
+
+</body>
+</html>
